@@ -9,38 +9,24 @@ CAMLextern value caml_channel_descriptor(value vchannel);
 CAMLextern void caml_sys_error (value);
 /* End of code duplication */
 
-static int capture_output_saved_stdout;
-static int capture_output_saved_stderr;
-
-CAMLprim value capture_output_setup (value voutput, value vstdout, value vstderr) {
-  int output_fd, stdout_fd, stderr_fd, fd, ret;
-  stdout_fd = Int_val(caml_channel_descriptor(vstdout));
-  stderr_fd = Int_val(caml_channel_descriptor(vstderr));
+CAMLprim value capture_output_setup (value voutput, value vtocapture) {
+  int output_fd, tocapture_fd, fd, ret;
+  tocapture_fd = Int_val(caml_channel_descriptor(vtocapture));
   output_fd = Int_val(caml_channel_descriptor(voutput));
-  fd = dup(stdout_fd);
+  fd = dup(tocapture_fd);
   if(fd == -1) caml_sys_error(NO_ARG);
-  capture_output_saved_stdout = fd;
-  fd = dup(stderr_fd);
-  if(fd == -1) caml_sys_error(NO_ARG);
-  capture_output_saved_stderr = fd;
-  ret = dup2(output_fd, stdout_fd);
+  ret = dup2(output_fd, tocapture_fd);
   if(ret == -1) caml_sys_error(NO_ARG);
-  ret = dup2(output_fd, stderr_fd);
-  if(ret == -1) caml_sys_error(NO_ARG);
-  return Val_unit;
+  return Val_int(fd);
 }
 
-CAMLprim value capture_output_restore (value vstdout, value vstderr) {
-  int stdout_fd, stderr_fd, ret;
-  stdout_fd = Int_val(caml_channel_descriptor(vstdout));
-  stderr_fd = Int_val(caml_channel_descriptor(vstderr));
-  ret = dup2(capture_output_saved_stdout, stdout_fd);
+CAMLprim value capture_output_restore (value vcaptured, value vold) {
+  int captured_fd, ret;
+  int old = Int_val(vold);
+  captured_fd = Int_val(caml_channel_descriptor(vcaptured));
+  ret = dup2(old, captured_fd);
   if(ret == -1) caml_sys_error(NO_ARG);
-  ret = dup2(capture_output_saved_stderr, stderr_fd);
-  if(ret == -1) caml_sys_error(NO_ARG);
-  ret = close(capture_output_saved_stdout);
-  if(ret == -1) caml_sys_error(NO_ARG);
-  ret = close(capture_output_saved_stderr);
+  ret = close(old);
   if(ret == -1) caml_sys_error(NO_ARG);
   return Val_unit;
 }
