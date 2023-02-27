@@ -92,3 +92,17 @@ let () =
   in
   expect ~here:__LOC__ ~expected:"HERE" s1;
   expect ~here:__LOC__ ~expected:"" s2
+
+let () =
+  let s, () =
+    Capture_output.capture ~f:(fun () ->
+        Capture_output_test_helper.capture_output_print_stdout ())
+  in
+  expect ~here:__LOC__ ~expected:"stdout from external" s
+
+let () =
+  let s, () =
+    Capture_output.capture ~f:(fun () ->
+        Capture_output_test_helper.capture_output_print_stderr ())
+  in
+  expect ~here:__LOC__ ~expected:"stderr from external" s
