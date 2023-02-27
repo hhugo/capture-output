@@ -1,4 +1,15 @@
+(library
+ (name capture_output_test_helper)
+ (modules capture_output_test_helper)
+ (foreign_stubs
+  (language c)
+  (names capture_output_test_stubs))
+ (js_of_ocaml
+  (javascript_files runtime.js)))
+
 (test
  (name basic)
+ (modules
+  (:standard \ capture_output_test_helper))
  (modes native js)
- (libraries capture_output))
+ (libraries capture_output capture_output_test_helper))
