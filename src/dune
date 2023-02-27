@@ -1,5 +1,6 @@
 (library
  (name capture_output)
+ (public_name capture-output)
  (foreign_stubs
   (language c)
   (names capture_output_stubs))

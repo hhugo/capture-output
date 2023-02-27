@@ -3,6 +3,17 @@ module Expert = struct
 
   external setup : into:out_channel -> out_channel -> t = "capture_output_setup"
   external restore : out_channel -> t -> unit = "capture_output_restore"
+
+  type redirection = { mutable restore : unit -> unit }
+
+  let redirect ~into c =
+    let t = setup ~into c in
+    { restore = (fun () -> restore c t) }
+
+  let stop t =
+    let f = t.restore in
+    t.restore <- (fun () -> ());
+    f ()
 end
 
 let with_channel_proxy f =
@@ -16,10 +27,10 @@ let with_channel_proxy f =
 
 let capture_channel' chan ~into ~f =
   flush stdout;
-  let t = Expert.setup ~into chan in
+  let t = Expert.redirect chan ~into in
   let r = f () in
   flush stdout;
-  let () = Expert.restore chan t in
+  let () = Expert.stop t in
   r
 
 let capture_channel chan ~f =
@@ -32,11 +43,11 @@ let capture ~f =
   with_channel_proxy (fun oc ->
       flush stderr;
       flush stdout;
-      let stdout_t = Expert.setup ~into:oc stdout in
-      let stderr_t = Expert.setup ~into:oc stderr in
+      let stdout_t = Expert.redirect stdout ~into:oc in
+      let stderr_t = Expert.redirect stderr ~into:oc in
       let r = f () in
       flush stderr;
       flush stdout;
-      let () = Expert.restore stdout stdout_t in
-      let () = Expert.restore stderr stderr_t in
+      let () = Expert.stop stdout_t in
+      let () = Expert.stop stderr_t in
       r)

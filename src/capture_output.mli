@@ -1,8 +1,8 @@
 module Expert : sig
-  type t
+  type redirection
 
-  external setup : into:out_channel -> out_channel -> t = "capture_output_setup"
-  external restore : out_channel -> t -> unit = "capture_output_restore"
+  val redirect : into:out_channel -> out_channel -> redirection
+  val stop : redirection -> unit
 end
 
 val capture_channel' : out_channel -> into:out_channel -> f:(unit -> 'a) -> 'a
