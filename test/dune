@@ -1,0 +1,4 @@
+(test
+ (name basic)
+ (modes native js)
+ (libraries capture_output))

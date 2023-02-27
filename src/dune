@@ -1,0 +1,7 @@
+(library
+ (name capture_output)
+ (foreign_stubs
+  (language c)
+  (names capture_output_stubs))
+ (js_of_ocaml
+  (javascript_files runtime.js)))
