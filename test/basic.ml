@@ -7,7 +7,7 @@ let expect ~here ~expected s =
 
 let () =
   let s, () =
-    Capture_output.capture ~f:(fun () ->
+    Out_channel_redirect.capture ~f:(fun () ->
         Printf.printf "printf%!";
         Printf.eprintf "eprintf%!")
   in
@@ -15,9 +15,9 @@ let () =
 
 let () =
   let s, inner =
-    Capture_output.capture ~f:(fun () ->
+    Out_channel_redirect.capture ~f:(fun () ->
         let (inner : string), () =
-          Capture_output.capture_stdout ~f:(fun () ->
+          Out_channel_redirect.capture_stdout ~f:(fun () ->
               Printf.printf "printf%!";
               Printf.eprintf "eprintf%!")
         in
@@ -28,9 +28,9 @@ let () =
 
 let () =
   let s, inner =
-    Capture_output.capture ~f:(fun () ->
+    Out_channel_redirect.capture ~f:(fun () ->
         let (inner : string), () =
-          Capture_output.capture_stderr ~f:(fun () ->
+          Out_channel_redirect.capture_stderr ~f:(fun () ->
               Printf.printf "printf%!";
               Printf.eprintf "eprintf%!")
         in
@@ -41,9 +41,9 @@ let () =
 
 let () =
   let s1, (s2, (s3, ())) =
-    Capture_output.capture_stderr ~f:(fun () ->
-        Capture_output.capture_stderr ~f:(fun () ->
-            Capture_output.capture_stderr ~f:(fun () -> Printf.eprintf "HERE%!")))
+    Out_channel_redirect.capture_stderr ~f:(fun () ->
+        Out_channel_redirect.capture_stderr ~f:(fun () ->
+            Out_channel_redirect.capture_stderr ~f:(fun () -> Printf.eprintf "HERE%!")))
   in
   expect ~here:__LOC__ ~expected:"" s1;
   expect ~here:__LOC__ ~expected:"" s2;
@@ -51,11 +51,11 @@ let () =
 
 let () =
   let s1, () =
-    Capture_output.capture_stderr ~f:(fun () ->
+    Out_channel_redirect.capture_stderr ~f:(fun () ->
         let s, () =
-          Capture_output.capture_stderr ~f:(fun () ->
+          Out_channel_redirect.capture_stderr ~f:(fun () ->
               let s, () =
-                Capture_output.capture_stderr ~f:(fun () ->
+                Out_channel_redirect.capture_stderr ~f:(fun () ->
                     Printf.eprintf "HERE%!")
               in
               Printf.eprintf "%s%!" s)
@@ -66,25 +66,25 @@ let () =
 
 let () =
   let s, () =
-    Capture_output.capture_stdout ~f:(fun () ->
-        Capture_output.capture_channel' stderr ~into:stdout ~f:(fun () ->
+    Out_channel_redirect.capture_stdout ~f:(fun () ->
+        Out_channel_redirect.capture_channel' stderr ~into:stdout ~f:(fun () ->
             Printf.eprintf "HERE%!"))
   in
   expect ~here:__LOC__ ~expected:"HERE" s
 
 let () =
   let s, () =
-    Capture_output.capture_channel' stderr ~into:stdout ~f:(fun () ->
-        Capture_output.capture_stderr ~f:(fun () -> Printf.eprintf "HERE%!"))
+    Out_channel_redirect.capture_channel' stderr ~into:stdout ~f:(fun () ->
+        Out_channel_redirect.capture_stderr ~f:(fun () -> Printf.eprintf "HERE%!"))
   in
   expect ~here:__LOC__ ~expected:"HERE" s
 
 let () =
   let s1, s2 =
-    Capture_output.capture_stdout ~f:(fun () ->
+    Out_channel_redirect.capture_stdout ~f:(fun () ->
         let s, () =
-          Capture_output.capture_channel' stderr ~into:stdout ~f:(fun () ->
-              Capture_output.capture_stdout ~f:(fun () ->
+          Out_channel_redirect.capture_channel' stderr ~into:stdout ~f:(fun () ->
+              Out_channel_redirect.capture_stdout ~f:(fun () ->
                   Printf.eprintf "HERE%!"))
         in
         s)
@@ -94,14 +94,14 @@ let () =
 
 let () =
   let s, () =
-    Capture_output.capture ~f:(fun () ->
+    Out_channel_redirect.capture ~f:(fun () ->
         Capture_output_test_helper.capture_output_print_stdout ())
   in
   expect ~here:__LOC__ ~expected:"stdout from external" s
 
 let () =
   let s, () =
-    Capture_output.capture ~f:(fun () ->
+    Out_channel_redirect.capture ~f:(fun () ->
         Capture_output_test_helper.capture_output_print_stderr ())
   in
   expect ~here:__LOC__ ~expected:"stderr from external" s
@@ -110,12 +110,12 @@ let () =
 let () =
   (try
      ignore
-       (Capture_output.capture_stdout ~f:(fun () ->
+       (Out_channel_redirect.capture_stdout ~f:(fun () ->
             Printf.printf "before%!";
             failwith "test exception"))
    with Failure _ -> ());
   let s, () =
-    Capture_output.capture_stdout ~f:(fun () -> Printf.printf "after%!")
+    Out_channel_redirect.capture_stdout ~f:(fun () -> Printf.printf "after%!")
   in
   expect ~here:__LOC__ ~expected:"after" s
 
@@ -123,12 +123,12 @@ let () =
 let () =
   (try
      ignore
-       (Capture_output.capture_stderr ~f:(fun () ->
+       (Out_channel_redirect.capture_stderr ~f:(fun () ->
             Printf.eprintf "before%!";
             failwith "test exception"))
    with Failure _ -> ());
   let s, () =
-    Capture_output.capture_stderr ~f:(fun () -> Printf.eprintf "after%!")
+    Out_channel_redirect.capture_stderr ~f:(fun () -> Printf.eprintf "after%!")
   in
   expect ~here:__LOC__ ~expected:"after" s
 
@@ -136,13 +136,13 @@ let () =
 let () =
   (try
      ignore
-       (Capture_output.capture ~f:(fun () ->
+       (Out_channel_redirect.capture ~f:(fun () ->
             Printf.printf "before%!";
             Printf.eprintf "before%!";
             failwith "test exception"))
    with Failure _ -> ());
   let s, () =
-    Capture_output.capture ~f:(fun () ->
+    Out_channel_redirect.capture ~f:(fun () ->
         Printf.printf "stdout%!";
         Printf.eprintf "stderr%!")
   in
@@ -151,18 +151,18 @@ let () =
 (* Expert.stop idempotency: calling stop twice should not crash *)
 let () =
   let s, () =
-    Capture_output.capture_stdout ~f:(fun () ->
-        let redir = Capture_output.Expert.redirect ~into:stdout stderr in
+    Out_channel_redirect.capture_stdout ~f:(fun () ->
+        let redir = Out_channel_redirect.Expert.redirect ~into:stdout stderr in
         Printf.eprintf "redirected%!";
-        Capture_output.Expert.stop redir;
-        Capture_output.Expert.stop redir)
+        Out_channel_redirect.Expert.stop redir;
+        Out_channel_redirect.Expert.stop redir)
   in
   expect ~here:__LOC__ ~expected:"redirected" s
 
 (* capture_channel called directly with stdout *)
 let () =
   let s, () =
-    Capture_output.capture_channel stdout ~f:(fun () ->
+    Out_channel_redirect.capture_channel stdout ~f:(fun () ->
         Printf.printf "direct channel%!")
   in
   expect ~here:__LOC__ ~expected:"direct channel" s
@@ -170,7 +170,7 @@ let () =
 (* capture_channel called directly with stderr *)
 let () =
   let s, () =
-    Capture_output.capture_channel stderr ~f:(fun () ->
+    Out_channel_redirect.capture_channel stderr ~f:(fun () ->
         Printf.eprintf "direct stderr%!")
   in
   expect ~here:__LOC__ ~expected:"direct stderr" s
@@ -179,7 +179,7 @@ let () =
 let () =
   let big = String.make 100_000 'x' in
   let s, () =
-    Capture_output.capture_stdout ~f:(fun () ->
+    Out_channel_redirect.capture_stdout ~f:(fun () ->
         print_string big;
         flush stdout)
   in
@@ -188,14 +188,14 @@ let () =
 (* Exception safety: capture_channel' restores on exception *)
 let () =
   let _, () =
-    Capture_output.capture_stdout ~f:(fun () ->
+    Out_channel_redirect.capture_stdout ~f:(fun () ->
         try
-          Capture_output.capture_channel' stderr ~into:stdout ~f:(fun () ->
+          Out_channel_redirect.capture_channel' stderr ~into:stdout ~f:(fun () ->
               Printf.eprintf "before%!";
               failwith "test exception")
         with Failure _ -> ())
   in
   let s, () =
-    Capture_output.capture_stderr ~f:(fun () -> Printf.eprintf "restored%!")
+    Out_channel_redirect.capture_stderr ~f:(fun () -> Printf.eprintf "restored%!")
   in
   expect ~here:__LOC__ ~expected:"restored" s

@@ -15,7 +15,7 @@
  (modules
   (:standard \ capture_output_test_helper))
  (modes native js wasm)
- (libraries capture-output capture_output_test_helper))
+ (libraries out-channel-redirect capture_output_test_helper))
 
 (env
  (_

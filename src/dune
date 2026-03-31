@@ -1,6 +1,6 @@
 (library
- (name capture_output)
- (public_name capture-output)
+ (name out_channel_redirect)
+ (public_name out-channel-redirect)
  (foreign_stubs
   (language c)
   (names capture_output_stubs))

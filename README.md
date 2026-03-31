@@ -1,28 +1,28 @@
-# capture-output
+# out-channel-redirect
 
-An OCaml library for capturing output written to `out_channel`s, with support for native, JavaScript (js_of_ocaml), and WebAssembly (wasm_of_ocaml) targets.
+An OCaml library for redirecting and capturing output written to `out_channel`s, with support for native, JavaScript (js_of_ocaml), and WebAssembly (wasm_of_ocaml) targets.
 
 On native, it works by redirecting file descriptors at the OS level (via `dup`/`dup2`), so it captures output from OCaml code as well as C stubs and foreign calls. On JavaScript and WebAssembly targets, it redirects at the channel level using the runtime's channel primitives.
 
 ## Installation
 
 ```
-opam install capture-output
+opam install out-channel-redirect
 ```
 
 ## Usage
 
 ```ocaml
 (* Capture an out_channel into a string *)
-let output, result = Capture_output.capture_channel stdout ~f:(fun () ->
+let output, result = Out_channel_redirect.capture_channel stdout ~f:(fun () ->
     print_endline "hello";
     42)
 (* output = "hello\n", result = 42 *)
 
 (* Convenience shorthands for stdout, stderr, or both *)
-let output, result = Capture_output.capture_stdout ~f:(fun () -> print_endline "hello"; 42)
-let output, result = Capture_output.capture_stderr ~f:(fun () -> prerr_endline "hello"; 42)
-let output, result = Capture_output.capture ~f:(fun () ->
+let output, result = Out_channel_redirect.capture_stdout ~f:(fun () -> print_endline "hello"; 42)
+let output, result = Out_channel_redirect.capture_stderr ~f:(fun () -> prerr_endline "hello"; 42)
+let output, result = Out_channel_redirect.capture ~f:(fun () ->
     print_endline "hello"; prerr_endline "world"; 42)
 ```
 
@@ -31,7 +31,7 @@ let output, result = Capture_output.capture ~f:(fun () ->
 `capture_channel'` redirects a channel into another without capturing to a string:
 
 ```ocaml
-Capture_output.capture_channel' stderr ~into:stdout ~f:(fun () ->
+Out_channel_redirect.capture_channel' stderr ~into:stdout ~f:(fun () ->
     prerr_endline "this goes to stdout now")
 ```
 
@@ -40,9 +40,9 @@ Capture_output.capture_channel' stderr ~into:stdout ~f:(fun () ->
 For manual control over redirection lifetime:
 
 ```ocaml
-let redir = Capture_output.Expert.redirect ~into:stdout stderr in
+let redir = Out_channel_redirect.Expert.redirect ~into:stdout stderr in
 prerr_endline "redirected to stdout";
-Capture_output.Expert.stop redir
+Out_channel_redirect.Expert.stop redir
 ```
 
 ## API
