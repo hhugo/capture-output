@@ -43,7 +43,8 @@ let () =
   let s1, (s2, (s3, ())) =
     Out_channel_redirect.capture_stderr ~f:(fun () ->
         Out_channel_redirect.capture_stderr ~f:(fun () ->
-            Out_channel_redirect.capture_stderr ~f:(fun () -> Printf.eprintf "HERE%!")))
+            Out_channel_redirect.capture_stderr ~f:(fun () ->
+                Printf.eprintf "HERE%!")))
   in
   expect ~here:__LOC__ ~expected:"" s1;
   expect ~here:__LOC__ ~expected:"" s2;
@@ -75,7 +76,8 @@ let () =
 let () =
   let s, () =
     Out_channel_redirect.redirect stderr ~into:stdout ~f:(fun () ->
-        Out_channel_redirect.capture_stderr ~f:(fun () -> Printf.eprintf "HERE%!"))
+        Out_channel_redirect.capture_stderr ~f:(fun () ->
+            Printf.eprintf "HERE%!"))
   in
   expect ~here:__LOC__ ~expected:"HERE" s
 
@@ -196,6 +198,7 @@ let () =
         with Failure _ -> ())
   in
   let s, () =
-    Out_channel_redirect.capture_stderr ~f:(fun () -> Printf.eprintf "restored%!")
+    Out_channel_redirect.capture_stderr ~f:(fun () ->
+        Printf.eprintf "restored%!")
   in
   expect ~here:__LOC__ ~expected:"restored" s

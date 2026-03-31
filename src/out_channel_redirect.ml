@@ -1,7 +1,9 @@
 module Expert = struct
   type t
 
-  external setup : into:out_channel -> out_channel -> t = "out_channel_redirect_setup"
+  external setup : into:out_channel -> out_channel -> t
+    = "out_channel_redirect_setup"
+
   external restore : out_channel -> t -> unit = "out_channel_redirect_restore"
 
   type redirection = { mutable restore : unit -> unit }
