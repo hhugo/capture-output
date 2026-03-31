@@ -50,6 +50,12 @@ jobs:
 
       - run: opam exec -- dune runtest
 
+      - name: Set-up Binaryen
+        if: ${{ matrix.ocaml-compiler != '4.06.x' }}
+        uses: Aandreba/setup-binaryen@v1.0.0
+        with:
+          token: ${{ github.token }}
+
       - run: opam exec -- dune build @runtest-wasm
         if: ${{ matrix.ocaml-compiler != '4.06.x' }}
 
