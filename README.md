@@ -63,7 +63,7 @@ val capture : f:(unit -> 'a) -> string * 'a
 
 ## Requirements
 
-- OCaml >= 4.06.1
+- OCaml >= 4.08
 - Dune >= 3.17
 
 ## License
