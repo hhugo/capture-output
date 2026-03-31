@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - main
   schedule:
     # Prime the caches every Monday
     - cron: 0 1 * * MON
@@ -19,6 +19,7 @@ jobs:
           - windows-latest
         ocaml-compiler:
           - 4.14.x
+          - 5.4.x
 
     runs-on: ${{ matrix.os }}
 
@@ -30,10 +31,10 @@ jobs:
           git config --global core.ignorecase false
 
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Use OCaml ${{ matrix.ocaml-compiler }}
-        uses: ocaml/setup-ocaml@v2
+        uses: ocaml/setup-ocaml@v3
         with:
           ocaml-compiler: ${{ matrix.ocaml-compiler }}
           dune-cache: ${{ matrix.os == 'ubuntu-latest' }}
@@ -55,13 +56,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Use OCaml 4.14.x
-        uses: ocaml/setup-ocaml@v2
+        uses: ocaml/setup-ocaml@v3
         with:
           ocaml-compiler: 4.14.x
           dune-cache: true
 
       - name: Lint fmt
-        uses: ocaml/setup-ocaml/lint-fmt@v2
+        uses: ocaml/setup-ocaml/lint-fmt@v3
