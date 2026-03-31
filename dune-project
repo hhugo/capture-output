@@ -3,10 +3,10 @@
 
 (maintainers "hugo.heuzard@gmail.com")
 (authors "Hugo Heuzard")
-(homepage "https://github.com/hhugo/capture-output")
+(homepage "https://github.com/hhugo/out-channel-redirect")
 (documentation "https://hhugo.github.io/capture-output/")
-(bug_reports "https://github.com/hhugo/capture-output/issues")
-(source (github hhugo/capture-output))
+(bug_reports "https://github.com/hhugo/out-channel-redirect/issues")
+(source (github hhugo/out-channel-redirect))
 (license MIT)
 
 (generate_opam_files true)
