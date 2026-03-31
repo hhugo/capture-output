@@ -16,3 +16,8 @@
   (:standard \ capture_output_test_helper))
  (modes native js wasm)
  (libraries capture-output capture_output_test_helper))
+
+(env
+ (_
+  (wasm_of_ocaml
+   (runtest_alias runtest-wasm))))

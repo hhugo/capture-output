@@ -51,6 +51,9 @@ jobs:
 
       - run: opam exec -- dune runtest
 
+      - run: opam exec -- dune build @runtest-wasm
+        if: ${{ matrix.ocaml-compiler != '4.06.x' }}
+
       - run: opam exec -- git diff --exit-code
 
   lint-fmt:
