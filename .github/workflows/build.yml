@@ -59,6 +59,8 @@ jobs:
 
       - run: opam exec -- dune build @runtest-wasm
         if: ${{ matrix.ocaml-compiler != '4.08.x' }}
+        env:
+          WASM_OF_OCAML: true
 
       - run: opam exec -- git diff --exit-code
 
