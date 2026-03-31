@@ -19,7 +19,9 @@ end
 let with_channel_proxy f =
   let fname, oc = Filename.open_temp_file "" "" in
   Fun.protect
-    ~finally:(fun () -> Sys.remove fname)
+    ~finally:(fun () ->
+      close_out_noerr oc;
+      Sys.remove fname)
     (fun () ->
       let r = f oc in
       close_out oc;
