@@ -4,7 +4,7 @@
 #include <caml/mlvalues.h>
 #include <unistd.h>
 
-CAMLprim value capture_output_init_channels(value stdout, value stderr){
+CAMLprim value capture_output_init_channels(value vout, value verr){
   return Val_unit;
 }
 
