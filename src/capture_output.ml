@@ -28,10 +28,9 @@ let with_channel_proxy f =
 let capture_channel' chan ~into ~f =
   flush chan;
   let t = Expert.redirect chan ~into in
-  let r = f () in
-  flush chan;
-  let () = Expert.stop t in
-  r
+  Fun.protect f ~finally:(fun () ->
+      flush chan;
+      Expert.stop t)
 
 let capture_channel chan ~f =
   with_channel_proxy (fun into -> capture_channel' chan ~into ~f)
@@ -45,9 +44,8 @@ let capture ~f =
       flush stdout;
       let stdout_t = Expert.redirect stdout ~into:oc in
       let stderr_t = Expert.redirect stderr ~into:oc in
-      let r = f () in
-      flush stderr;
-      flush stdout;
-      let () = Expert.stop stdout_t in
-      let () = Expert.stop stderr_t in
-      r)
+      Fun.protect f ~finally:(fun () ->
+          flush stderr;
+          flush stdout;
+          Expert.stop stderr_t;
+          Expert.stop stdout_t))
