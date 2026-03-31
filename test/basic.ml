@@ -79,7 +79,6 @@ let () =
   in
   expect ~here:__LOC__ ~expected:"HERE" s
 
-(* FIX ??? *)
 let () =
   let s1, s2 =
     Capture_output.capture_stdout ~f:(fun () ->

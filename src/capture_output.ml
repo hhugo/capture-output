@@ -26,10 +26,10 @@ let with_channel_proxy f =
   (c, r)
 
 let capture_channel' chan ~into ~f =
-  flush stdout;
+  flush chan;
   let t = Expert.redirect chan ~into in
   let r = f () in
-  flush stdout;
+  flush chan;
   let () = Expert.stop t in
   r
 
