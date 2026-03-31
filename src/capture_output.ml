@@ -18,12 +18,15 @@ end
 
 let with_channel_proxy f =
   let fname, oc = Filename.open_temp_file "" "" in
-  let r = f oc in
-  close_out oc;
-  let ic = open_in_bin fname in
-  let c = really_input_string ic (in_channel_length ic) in
-  close_in ic;
-  (c, r)
+  Fun.protect
+    ~finally:(fun () -> Sys.remove fname)
+    (fun () ->
+      let r = f oc in
+      close_out oc;
+      let ic = open_in_bin fname in
+      let c = really_input_string ic (in_channel_length ic) in
+      close_in ic;
+      (c, r))
 
 let capture_channel' chan ~into ~f =
   flush chan;
