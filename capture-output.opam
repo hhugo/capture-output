@@ -12,7 +12,7 @@ doc: "https://hhugo.github.io/capture-output/"
 bug-reports: "https://github.com/hhugo/capture-output/issues"
 depends: [
   "dune" {>= "3.17"}
-  "ocaml" {>= "4.06.1"}
+  "ocaml" {>= "4.08"}
   "ocamlformat" {= "0.28.1" & with-dev-setup}
   "js_of_ocaml" {with-test}
   "odoc" {with-doc}

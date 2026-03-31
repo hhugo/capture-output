@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <caml/alloc.h>
 #include <caml/memory.h>
 #include <caml/mlvalues.h>

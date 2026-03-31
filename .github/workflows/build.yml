@@ -18,12 +18,12 @@ jobs:
           - ubuntu-latest
           - windows-latest
         ocaml-compiler:
-          - 4.06.x
+          - 4.08.x
           - 4.14.x
           - 5.4.x
         exclude:
           - os: windows-latest
-            ocaml-compiler: 4.06.x
+            ocaml-compiler: 4.08.x
 
     runs-on: ${{ matrix.os }}
 
@@ -37,7 +37,7 @@ jobs:
           node-version: latest
 
       - name: Set-up Binaryen
-        if: ${{ matrix.ocaml-compiler != '4.06.x' }}
+        if: ${{ matrix.ocaml-compiler != '4.08.x' }}
         uses: Aandreba/setup-binaryen@v1.0.0
         with:
           token: ${{ github.token }}
@@ -51,14 +51,14 @@ jobs:
       - run: opam install . --with-test
 
       - run: opam install wasm_of_ocaml-compiler
-        if: ${{ matrix.ocaml-compiler != '4.06.x' }}
+        if: ${{ matrix.ocaml-compiler != '4.08.x' }}
 
       - run: opam exec -- dune build
 
       - run: opam exec -- dune runtest
 
       - run: opam exec -- dune build @runtest-wasm
-        if: ${{ matrix.ocaml-compiler != '4.06.x' }}
+        if: ${{ matrix.ocaml-compiler != '4.08.x' }}
 
       - run: opam exec -- git diff --exit-code
 
