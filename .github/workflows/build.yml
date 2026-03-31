@@ -31,6 +31,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set-up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: latest
+
       - name: Set-up Binaryen
         if: ${{ matrix.ocaml-compiler != '4.06.x' }}
         uses: Aandreba/setup-binaryen@v1.0.0
