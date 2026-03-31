@@ -18,6 +18,6 @@
   "An OCaml library for capturing output written to out_channels, with support\nfor native, JavaScript (js_of_ocaml), and WebAssembly (wasm_of_ocaml) targets.")
  (depends
   (ocaml (>= 4.06.1))
-  (ocamlformat (and (= 0.28.1) :with-test))
+  (ocamlformat (and (= 0.28.1) :with-dev-setup))
   (js_of_ocaml :with-test)
   (wasm_of_ocaml-compiler :with-test)))
