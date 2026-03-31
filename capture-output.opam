@@ -17,7 +17,8 @@ depends: [
   "wasm_of_ocaml-compiler"  { with-test }
 ]
 
-synopsis: "TODO"
+synopsis: "Capture output written to out_channels"
 description: """
-TODO
+An OCaml library for capturing output written to out_channels, with support
+for native, JavaScript (js_of_ocaml), and WebAssembly (wasm_of_ocaml) targets.
 """
