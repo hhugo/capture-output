@@ -19,5 +19,5 @@
  (depends
   (ocaml (>= 4.06.1))
   (ocamlformat (and (= 0.28.1) :with-dev-setup))
-  (js_of_ocaml :with-test)
-  (wasm_of_ocaml-compiler :with-test)))
+  (js_of_ocaml :with-test))
+ (depopts (wasm_of_ocaml-compiler :with-test)))
