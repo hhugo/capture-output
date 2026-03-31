@@ -9,7 +9,7 @@ CAMLextern value caml_channel_descriptor(value vchannel);
 CAMLextern void caml_sys_error (value);
 /* End of code duplication */
 
-CAMLprim value capture_output_setup (value voutput, value vtocapture) {
+CAMLprim value out_channel_redirect_setup (value voutput, value vtocapture) {
   int output_fd, tocapture_fd, fd, ret;
   tocapture_fd = Int_val(caml_channel_descriptor(vtocapture));
   output_fd = Int_val(caml_channel_descriptor(voutput));
@@ -20,7 +20,7 @@ CAMLprim value capture_output_setup (value voutput, value vtocapture) {
   return Val_int(fd);
 }
 
-CAMLprim value capture_output_restore (value vcaptured, value vold) {
+CAMLprim value out_channel_redirect_restore (value vcaptured, value vold) {
   int captured_fd, ret;
   int old = Int_val(vold);
   captured_fd = Int_val(caml_channel_descriptor(vcaptured));

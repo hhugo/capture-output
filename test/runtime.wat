@@ -14,7 +14,7 @@
    (data $stdout_msg "stdout from external")
    (data $stderr_msg "stderr from external")
 
-   (func (export "capture_output_init_channels")
+   (func (export "out_channel_redirect_init_channels")
       (param $stdout (ref eq)) (param $stderr (ref eq)) (result (ref eq))
       (global.set $stdout_chan (local.get $stdout))
       (global.set $stderr_chan (local.get $stderr))
@@ -29,7 +29,7 @@
          (ref.i31 (array.len (ref.cast (ref $bytes) (local.get $bytes))))))
       (drop (call $caml_ml_flush (local.get $chan))))
 
-   (func (export "capture_output_print_stdout")
+   (func (export "out_channel_redirect_print_stdout")
       (param (ref eq)) (result (ref eq))
       (if (i32.eqz (ref.is_null (global.get $stdout_chan)))
          (then
@@ -39,7 +39,7 @@
                   (i32.const 0) (i32.const 20)))))
       (ref.i31 (i32.const 0)))
 
-   (func (export "capture_output_print_stderr")
+   (func (export "out_channel_redirect_print_stderr")
       (param (ref eq)) (result (ref eq))
       (if (i32.eqz (ref.is_null (global.get $stderr_chan)))
          (then

@@ -1,11 +1,11 @@
-//Provides: capture_output_setup
+//Provides: out_channel_redirect_setup
 //Requires: caml_ml_channel_redirect
-function capture_output_setup (voutput, vtocapture){
+function out_channel_redirect_setup (voutput, vtocapture){
   return caml_ml_channel_redirect(vtocapture, voutput);
 }
 
-//Provides: capture_output_restore
+//Provides: out_channel_redirect_restore
 //Requires: caml_ml_channel_restore
-function capture_output_restore (captured, old){
+function out_channel_redirect_restore (captured, old){
   return caml_ml_channel_restore(captured, old);
 }

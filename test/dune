@@ -1,9 +1,9 @@
 (library
- (name capture_output_test_helper)
- (modules capture_output_test_helper)
+ (name out_channel_redirect_test_helper)
+ (modules out_channel_redirect_test_helper)
  (foreign_stubs
   (language c)
-  (names capture_output_test_stubs))
+  (names out_channel_redirect_test_stubs))
  (js_of_ocaml
   (javascript_files runtime.js))
  (wasm_of_ocaml
@@ -13,9 +13,9 @@
 (test
  (name basic)
  (modules
-  (:standard \ capture_output_test_helper))
+  (:standard \ out_channel_redirect_test_helper))
  (modes native js wasm)
- (libraries out-channel-redirect capture_output_test_helper))
+ (libraries out-channel-redirect out_channel_redirect_test_helper))
 
 (env
  (_

@@ -95,14 +95,14 @@ let () =
 let () =
   let s, () =
     Out_channel_redirect.capture ~f:(fun () ->
-        Capture_output_test_helper.capture_output_print_stdout ())
+        Out_channel_redirect_test_helper.out_channel_redirect_print_stdout ())
   in
   expect ~here:__LOC__ ~expected:"stdout from external" s
 
 let () =
   let s, () =
     Out_channel_redirect.capture ~f:(fun () ->
-        Capture_output_test_helper.capture_output_print_stderr ())
+        Out_channel_redirect_test_helper.out_channel_redirect_print_stderr ())
   in
   expect ~here:__LOC__ ~expected:"stderr from external" s
 

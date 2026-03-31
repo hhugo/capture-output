@@ -4,17 +4,17 @@
 #include <caml/mlvalues.h>
 #include <unistd.h>
 
-CAMLprim value capture_output_init_channels(value vout, value verr){
+CAMLprim value out_channel_redirect_init_channels(value vout, value verr){
   return Val_unit;
 }
 
-CAMLprim value capture_output_print_stdout(value unit){
+CAMLprim value out_channel_redirect_print_stdout(value unit){
   fprintf(stdout, "stdout from external");
   fflush(stdout);
   return Val_unit;
 }
 
-CAMLprim value capture_output_print_stderr(value unit){
+CAMLprim value out_channel_redirect_print_stderr(value unit){
   fprintf(stderr, "stderr from external");
   fflush(stderr);
   return Val_unit;

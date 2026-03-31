@@ -3,7 +3,7 @@
  (public_name out-channel-redirect)
  (foreign_stubs
   (language c)
-  (names capture_output_stubs))
+  (names out_channel_redirect_stubs))
  (js_of_ocaml
   (javascript_files runtime.js))
  (wasm_of_ocaml
