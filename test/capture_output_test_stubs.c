@@ -3,6 +3,10 @@
 #include <caml/mlvalues.h>
 #include <unistd.h>
 
+CAMLprim value capture_output_init_channels(value stdout, value stderr){
+  return Val_unit;
+}
+
 CAMLprim value capture_output_print_stdout(value unit){
   fprintf(stdout, "stdout from external");
   fflush(stdout);

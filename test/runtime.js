@@ -1,3 +1,6 @@
+//Provides: capture_output_init_channels
+function capture_output_init_channels(stdout, stderr) { return 0; }
+
 //Provides: capture_output_log
 //Requires: caml_ml_output,caml_ml_string_length,caml_string_of_jsbytes,caml_sys_fds
 function capture_output_log(fd, x) {

@@ -5,11 +5,14 @@
   (language c)
   (names capture_output_test_stubs))
  (js_of_ocaml
-  (javascript_files runtime.js)))
+  (javascript_files runtime.js))
+ (wasm_of_ocaml
+  (javascript_files runtime.js)
+  (wasm_files runtime.wat)))
 
 (test
  (name basic)
  (modules
   (:standard \ capture_output_test_helper))
- (modes native js)
+ (modes native js wasm)
  (libraries capture-output capture_output_test_helper))
