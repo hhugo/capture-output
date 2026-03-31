@@ -34,6 +34,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set-up Binaryen
+        if: ${{ matrix.ocaml-compiler != '4.06.x' }}
+        uses: Aandreba/setup-binaryen@v1.0.0
+        with:
+          token: ${{ github.token }}
+
       - name: Use OCaml ${{ matrix.ocaml-compiler }}
         uses: ocaml/setup-ocaml@v3
         with:
@@ -49,12 +55,6 @@ jobs:
       - run: opam exec -- dune build
 
       - run: opam exec -- dune runtest
-
-      - name: Set-up Binaryen
-        if: ${{ matrix.ocaml-compiler != '4.06.x' }}
-        uses: Aandreba/setup-binaryen@v1.0.0
-        with:
-          token: ${{ github.token }}
 
       - run: opam exec -- dune build @runtest-wasm
         if: ${{ matrix.ocaml-compiler != '4.06.x' }}
