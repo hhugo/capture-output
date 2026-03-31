@@ -67,14 +67,14 @@ let () =
 let () =
   let s, () =
     Out_channel_redirect.capture_stdout ~f:(fun () ->
-        Out_channel_redirect.capture_channel' stderr ~into:stdout ~f:(fun () ->
+        Out_channel_redirect.redirect stderr ~into:stdout ~f:(fun () ->
             Printf.eprintf "HERE%!"))
   in
   expect ~here:__LOC__ ~expected:"HERE" s
 
 let () =
   let s, () =
-    Out_channel_redirect.capture_channel' stderr ~into:stdout ~f:(fun () ->
+    Out_channel_redirect.redirect stderr ~into:stdout ~f:(fun () ->
         Out_channel_redirect.capture_stderr ~f:(fun () -> Printf.eprintf "HERE%!"))
   in
   expect ~here:__LOC__ ~expected:"HERE" s
@@ -83,7 +83,7 @@ let () =
   let s1, s2 =
     Out_channel_redirect.capture_stdout ~f:(fun () ->
         let s, () =
-          Out_channel_redirect.capture_channel' stderr ~into:stdout ~f:(fun () ->
+          Out_channel_redirect.redirect stderr ~into:stdout ~f:(fun () ->
               Out_channel_redirect.capture_stdout ~f:(fun () ->
                   Printf.eprintf "HERE%!"))
         in
@@ -190,7 +190,7 @@ let () =
   let _, () =
     Out_channel_redirect.capture_stdout ~f:(fun () ->
         try
-          Out_channel_redirect.capture_channel' stderr ~into:stdout ~f:(fun () ->
+          Out_channel_redirect.redirect stderr ~into:stdout ~f:(fun () ->
               Printf.eprintf "before%!";
               failwith "test exception")
         with Failure _ -> ())

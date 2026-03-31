@@ -30,7 +30,7 @@ let with_channel_proxy f =
       close_in ic;
       (c, r))
 
-let capture_channel' chan ~into ~f =
+let redirect chan ~into ~f =
   flush chan;
   let t = Expert.redirect chan ~into in
   Fun.protect f ~finally:(fun () ->
@@ -38,7 +38,7 @@ let capture_channel' chan ~into ~f =
       Expert.stop t)
 
 let capture_channel chan ~f =
-  with_channel_proxy (fun into -> capture_channel' chan ~into ~f)
+  with_channel_proxy (fun into -> redirect chan ~into ~f)
 
 let capture_stdout ~f = capture_channel stdout ~f
 let capture_stderr ~f = capture_channel stderr ~f

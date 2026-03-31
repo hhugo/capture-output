@@ -28,10 +28,10 @@ let output, result = Out_channel_redirect.capture ~f:(fun () ->
 
 ### Redirecting a channel into another
 
-`capture_channel'` redirects a channel into another without capturing to a string:
+`redirect` redirects a channel into another without capturing to a string:
 
 ```ocaml
-Out_channel_redirect.capture_channel' stderr ~into:stdout ~f:(fun () ->
+Out_channel_redirect.redirect stderr ~into:stdout ~f:(fun () ->
     prerr_endline "this goes to stdout now")
 ```
 
@@ -54,7 +54,7 @@ module Expert : sig
   val stop : redirection -> unit
 end
 
-val capture_channel' : out_channel -> into:out_channel -> f:(unit -> 'a) -> 'a
+val redirect : out_channel -> into:out_channel -> f:(unit -> 'a) -> 'a
 val capture_channel : out_channel -> f:(unit -> 'a) -> string * 'a
 val capture_stdout : f:(unit -> 'a) -> string * 'a
 val capture_stderr : f:(unit -> 'a) -> string * 'a
