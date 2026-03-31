@@ -1,15 +1,11 @@
 //Provides: capture_output_setup
-//Requires: caml_global_data, caml_ml_channels
+//Requires: caml_ml_channel_redirect
 function capture_output_setup (voutput, vtocapture){
-  var old = caml_ml_channels[vtocapture];
-  var output = caml_ml_channels[voutput];
-  caml_ml_channels[vtocapture] = output;
-  return old;
+  return caml_ml_channel_redirect(vtocapture, voutput);
 }
 
 //Provides: capture_output_restore
-//Requires: caml_global_data, caml_ml_channels
+//Requires: caml_ml_channel_restore
 function capture_output_restore (captured, old){
-  caml_ml_channels[captured] = old;
-  return 0;
+  return caml_ml_channel_restore(captured, old);
 }
