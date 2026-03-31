@@ -4,7 +4,7 @@
 (maintainers "hugo.heuzard@gmail.com")
 (authors "Hugo Heuzard")
 (homepage "https://github.com/hhugo/out-channel-redirect")
-(documentation "https://hhugo.github.io/capture-output/")
+(documentation "https://hhugo.github.io/out-channel-redirect/")
 (bug_reports "https://github.com/hhugo/out-channel-redirect/issues")
 (source (github hhugo/out-channel-redirect))
 (license MIT)
