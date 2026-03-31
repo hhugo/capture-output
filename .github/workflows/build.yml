@@ -48,11 +48,7 @@ jobs:
           ocaml-compiler: ${{ matrix.ocaml-compiler }}
           dune-cache: ${{ matrix.os == 'ubuntu-latest' }}
 
-      - run: opam install . --best-effort
-        if: ${{ matrix.skip-test }}
-
-      - run: opam install . --with-test
-        if: ${{ !matrix.skip-test }}
+      - run: opam install . --with-test --best-effort
 
       - run: opam exec -- dune build
 
