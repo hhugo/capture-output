@@ -207,8 +207,11 @@ let () =
   assert (n = 42)
 
 (* capture_channels_interleaved flushes channels in list order at the
-   end of [f]. With buffered channels, the list order therefore determines
-   which buffer reaches the capture file first. *)
+   end of [f]. On Native/Bytecode each channel keeps its own buffer, so
+   the list order determines which buffer reaches the capture file first.
+   On JS/Wasm the redirect swaps the entire channel object: writes to any
+   listed channel go into the proxy's buffer in call order, regardless of
+   list order. *)
 let () =
   let tmp1, c1 = Filename.open_temp_file "test-" "" in
   let tmp2, c2 = Filename.open_temp_file "test-" "" in
@@ -223,7 +226,9 @@ let () =
         output_string c1 "a";
         output_string c2 "b")
   in
-  expect ~here:__LOC__ ~expected:"ba" s_b_then_a;
+  (match Sys.backend_type with
+  | Native | Bytecode -> expect ~here:__LOC__ ~expected:"ba" s_b_then_a
+  | Other _ -> expect ~here:__LOC__ ~expected:"ab" s_b_then_a);
   close_out_noerr c1;
   close_out_noerr c2;
   Sys.remove tmp1;
