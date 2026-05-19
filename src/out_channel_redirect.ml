@@ -78,3 +78,5 @@ let capture_outputs ~f =
 
 let capture_outputs_interleaved ~f =
   capture_channels_interleaved [ stdout; stderr ] ~f
+
+let capture ~f = capture_outputs_interleaved ~f
