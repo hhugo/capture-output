@@ -227,7 +227,8 @@ let () =
         output_string c2 "b")
   in
   (match Sys.backend_type with
-  | Native | Bytecode -> expect ~here:__LOC__ ~expected:"ba" s_b_then_a
+  | Native | Bytecode | Other "wasm_of_ocaml" ->
+      expect ~here:__LOC__ ~expected:"ba" s_b_then_a
   | Other _ -> expect ~here:__LOC__ ~expected:"ab" s_b_then_a);
   close_out_noerr c1;
   close_out_noerr c2;
