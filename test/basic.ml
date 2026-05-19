@@ -206,6 +206,28 @@ let () =
   assert (xs = []);
   assert (n = 42)
 
+(* capture_channels with a channel duplicated in the list: the innermost
+   redirection wins, earlier entries capture nothing *)
+let () =
+  let xs, () =
+    Out_channel_redirect.capture_channels [ stdout; stdout ] ~f:(fun () ->
+        Printf.printf "hello%!")
+  in
+  match xs with
+  | [ a; b ] ->
+      expect ~here:__LOC__ ~expected:"" a;
+      expect ~here:__LOC__ ~expected:"hello" b
+  | _ -> assert false
+
+(* capture_channels_interleaved with a duplicated channel: output appears
+   once *)
+let () =
+  let s, () =
+    Out_channel_redirect.capture_channels_interleaved [ stdout; stdout ]
+      ~f:(fun () -> Printf.printf "hello%!")
+  in
+  expect ~here:__LOC__ ~expected:"hello" s
+
 (* capture_outputs returns stdout and stderr separately *)
 let () =
   let out, err, () =
