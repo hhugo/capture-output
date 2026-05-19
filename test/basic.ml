@@ -187,6 +187,32 @@ let () =
   in
   expect ~here:__LOC__ ~expected:big s
 
+(* capture_outputs returns stdout and stderr separately *)
+let () =
+  let out, err, () =
+    Out_channel_redirect.capture_outputs ~f:(fun () ->
+        Printf.printf "to-stdout%!";
+        Printf.eprintf "to-stderr%!")
+  in
+  expect ~here:__LOC__ ~expected:"to-stdout" out;
+  expect ~here:__LOC__ ~expected:"to-stderr" err
+
+(* Exception safety: capture_outputs restores both channels on exception *)
+let () =
+  (try
+     ignore
+       (Out_channel_redirect.capture_outputs ~f:(fun () ->
+            Printf.printf "before%!";
+            Printf.eprintf "before%!";
+            failwith "test exception"))
+   with Failure _ -> ());
+  let s, () =
+    Out_channel_redirect.capture ~f:(fun () ->
+        Printf.printf "stdout%!";
+        Printf.eprintf "stderr%!")
+  in
+  expect ~here:__LOC__ ~expected:"stdoutstderr" s
+
 (* Exception safety: capture_channel' restores on exception *)
 let () =
   let _, () =

@@ -56,3 +56,19 @@ let capture ~f =
           flush stdout;
           Expert.stop stderr_t;
           Expert.stop stdout_t))
+
+let capture_outputs ~f =
+  let out, (err, r) =
+    with_channel_proxy (fun out_oc ->
+        with_channel_proxy (fun err_oc ->
+            flush stdout;
+            flush stderr;
+            let stdout_t = Expert.redirect stdout ~into:out_oc in
+            let stderr_t = Expert.redirect stderr ~into:err_oc in
+            Fun.protect f ~finally:(fun () ->
+                flush stdout;
+                flush stderr;
+                Expert.stop stderr_t;
+                Expert.stop stdout_t)))
+  in
+  (out, err, r)
