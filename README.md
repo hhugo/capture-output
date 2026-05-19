@@ -71,7 +71,7 @@ end
 
 ## Requirements
 
-- OCaml >= 4.08
+- OCaml >= 4.11
 - Dune >= 3.17
 
 ## License
