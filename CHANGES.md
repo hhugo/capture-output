@@ -1,10 +1,11 @@
-# Unreleased
+# 0.2 (2026-05-19)
 
 - Add `capture_channels` and `capture_channels_interleaved` for capturing
   a list of channels (separately or merged into one string)
 - Add `capture_outputs` and `capture_outputs_interleaved` for stdout and
   stderr (separately or merged)
 - `capture` is now an alias for `capture_outputs_interleaved`
+- Raise OCaml lower bound to 4.11
 
 # 0.1
 
