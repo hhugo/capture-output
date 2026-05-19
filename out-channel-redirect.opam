@@ -12,7 +12,7 @@ doc: "https://ocaml.org/p/out-channel-redirect"
 bug-reports: "https://github.com/hhugo/out-channel-redirect/issues"
 depends: [
   "dune" {>= "3.17"}
-  "ocaml" {>= "4.08"}
+  "ocaml" {>= "4.11"}
   "ocamlformat" {= "0.28.1" & with-dev-setup}
   "js_of_ocaml" {with-test}
   "odoc" {with-doc}
