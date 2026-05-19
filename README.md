@@ -22,7 +22,7 @@ let output, result = Out_channel_redirect.capture_channel stdout ~f:(fun () ->
 (* Convenience shorthands for stdout, stderr, or both *)
 let output, result = Out_channel_redirect.capture_stdout ~f:(fun () -> print_endline "hello"; 42)
 let output, result = Out_channel_redirect.capture_stderr ~f:(fun () -> prerr_endline "hello"; 42)
-let output, result = Out_channel_redirect.capture ~f:(fun () ->
+let output, result = Out_channel_redirect.capture_outputs_interleaved ~f:(fun () ->
     print_endline "hello"; prerr_endline "world"; 42)
 ```
 
@@ -56,9 +56,13 @@ end
 
 val redirect : out_channel -> into:out_channel -> f:(unit -> 'a) -> 'a
 val capture_channel : out_channel -> f:(unit -> 'a) -> string * 'a
+val capture_channels : out_channel list -> f:(unit -> 'a) -> string list * 'a
+val capture_channels_interleaved :
+  out_channel list -> f:(unit -> 'a) -> string * 'a
 val capture_stdout : f:(unit -> 'a) -> string * 'a
 val capture_stderr : f:(unit -> 'a) -> string * 'a
-val capture : f:(unit -> 'a) -> string * 'a
+val capture_outputs : f:(unit -> 'a) -> string * string * 'a
+val capture_outputs_interleaved : f:(unit -> 'a) -> string * 'a
 ```
 
 ## Requirements

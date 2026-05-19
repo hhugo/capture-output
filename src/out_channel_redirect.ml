@@ -42,10 +42,7 @@ let redirect chan ~into ~f =
 let capture_channel chan ~f =
   with_channel_proxy (fun into -> redirect chan ~into ~f)
 
-let capture_stdout ~f = capture_channel stdout ~f
-let capture_stderr ~f = capture_channel stderr ~f
-
-let capture_all chans ~f =
+let capture_channels_interleaved chans ~f =
   with_channel_proxy (fun oc ->
       List.iter flush chans;
       let ts = List.map (fun c -> Expert.redirect c ~into:oc) chans in
@@ -53,20 +50,31 @@ let capture_all chans ~f =
           List.iter flush chans;
           List.iter Expert.stop (List.rev ts)))
 
-let capture ~f = capture_all [ stdout; stderr ] ~f
+let capture_channels chans ~f =
+  let rec loop = function
+    | [] -> ([], f ())
+    | c :: rest ->
+        let s, (ss, r) =
+          with_channel_proxy (fun oc ->
+              flush c;
+              let t = Expert.redirect c ~into:oc in
+              Fun.protect
+                (fun () -> loop rest)
+                ~finally:(fun () ->
+                  flush c;
+                  Expert.stop t))
+        in
+        (s :: ss, r)
+  in
+  loop chans
+
+let capture_stdout ~f = capture_channel stdout ~f
+let capture_stderr ~f = capture_channel stderr ~f
 
 let capture_outputs ~f =
-  let out, (err, r) =
-    with_channel_proxy (fun out_oc ->
-        with_channel_proxy (fun err_oc ->
-            flush stdout;
-            flush stderr;
-            let stdout_t = Expert.redirect stdout ~into:out_oc in
-            let stderr_t = Expert.redirect stderr ~into:err_oc in
-            Fun.protect f ~finally:(fun () ->
-                flush stdout;
-                flush stderr;
-                Expert.stop stderr_t;
-                Expert.stop stdout_t)))
-  in
-  (out, err, r)
+  match capture_channels [ stdout; stderr ] ~f with
+  | [ out; err ], r -> (out, err, r)
+  | _ -> assert false
+
+let capture_outputs_interleaved ~f =
+  capture_channels_interleaved [ stdout; stderr ] ~f
