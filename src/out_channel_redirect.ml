@@ -45,17 +45,15 @@ let capture_channel chan ~f =
 let capture_stdout ~f = capture_channel stdout ~f
 let capture_stderr ~f = capture_channel stderr ~f
 
-let capture ~f =
+let capture_all chans ~f =
   with_channel_proxy (fun oc ->
-      flush stderr;
-      flush stdout;
-      let stdout_t = Expert.redirect stdout ~into:oc in
-      let stderr_t = Expert.redirect stderr ~into:oc in
+      List.iter flush chans;
+      let ts = List.map (fun c -> Expert.redirect c ~into:oc) chans in
       Fun.protect f ~finally:(fun () ->
-          flush stderr;
-          flush stdout;
-          Expert.stop stderr_t;
-          Expert.stop stdout_t))
+          List.iter flush chans;
+          List.iter Expert.stop (List.rev ts)))
+
+let capture ~f = capture_all [ stdout; stderr ] ~f
 
 let capture_outputs ~f =
   let out, (err, r) =
