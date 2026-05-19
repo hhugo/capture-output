@@ -16,3 +16,4 @@ val capture_stdout : f:(unit -> 'a) -> string * 'a
 val capture_stderr : f:(unit -> 'a) -> string * 'a
 val capture_outputs : f:(unit -> 'a) -> string * string * 'a
 val capture_outputs_interleaved : f:(unit -> 'a) -> string * 'a
+val capture : f:(unit -> 'a) -> string * 'a
