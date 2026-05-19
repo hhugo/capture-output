@@ -35,9 +35,9 @@ let with_channel_proxy f =
 let redirect chan ~into ~f =
   flush chan;
   let t = Expert.redirect chan ~into in
-  Fun.protect f ~finally:(fun () ->
-      flush chan;
-      Expert.stop t)
+  Fun.protect
+    (fun () -> Fun.protect f ~finally:(fun () -> flush chan))
+    ~finally:(fun () -> Expert.stop t)
 
 let capture_channel chan ~f =
   with_channel_proxy (fun into -> redirect chan ~into ~f)
@@ -46,9 +46,9 @@ let capture_channels_interleaved chans ~f =
   with_channel_proxy (fun oc ->
       List.iter flush chans;
       let ts = List.map (fun c -> Expert.redirect c ~into:oc) chans in
-      Fun.protect f ~finally:(fun () ->
-          List.iter flush chans;
-          List.iter Expert.stop (List.rev ts)))
+      Fun.protect
+        (fun () -> Fun.protect f ~finally:(fun () -> List.iter flush chans))
+        ~finally:(fun () -> List.iter Expert.stop (List.rev ts)))
 
 let capture_channels chans ~f =
   let rec loop = function
@@ -59,10 +59,9 @@ let capture_channels chans ~f =
               flush c;
               let t = Expert.redirect c ~into:oc in
               Fun.protect
-                (fun () -> loop rest)
-                ~finally:(fun () ->
-                  flush c;
-                  Expert.stop t))
+                (fun () ->
+                  Fun.protect (fun () -> loop rest) ~finally:(fun () -> flush c))
+                ~finally:(fun () -> Expert.stop t))
         in
         (s :: ss, r)
   in
