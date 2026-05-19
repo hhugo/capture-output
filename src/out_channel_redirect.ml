@@ -19,7 +19,7 @@ module Expert = struct
 end
 
 let with_channel_proxy f =
-  let fname, oc = Filename.open_temp_file "" "" in
+  let fname, oc = Filename.open_temp_file "out_channel_redirect-" "" in
   Fun.protect
     ~finally:(fun () ->
       close_out_noerr oc;
