@@ -206,6 +206,41 @@ let () =
   assert (xs = []);
   assert (n = 42)
 
+(* capture_channels_interleaved flushes channels in list order at the
+   end of [f]. With buffered channels, the list order therefore determines
+   which buffer reaches the capture file first. *)
+let () =
+  let tmp1, c1 = Filename.open_temp_file "test-" "" in
+  let tmp2, c2 = Filename.open_temp_file "test-" "" in
+  let s_a_then_b, () =
+    Out_channel_redirect.capture_channels_interleaved [ c1; c2 ] ~f:(fun () ->
+        output_string c1 "a";
+        output_string c2 "b")
+  in
+  expect ~here:__LOC__ ~expected:"ab" s_a_then_b;
+  let s_b_then_a, () =
+    Out_channel_redirect.capture_channels_interleaved [ c2; c1 ] ~f:(fun () ->
+        output_string c1 "a";
+        output_string c2 "b")
+  in
+  expect ~here:__LOC__ ~expected:"ba" s_b_then_a;
+  close_out_noerr c1;
+  close_out_noerr c2;
+  Sys.remove tmp1;
+  Sys.remove tmp2
+
+(* capture_channels_interleaved merges output from several channels in
+   write order *)
+let () =
+  let s, () =
+    Out_channel_redirect.capture_channels_interleaved [ stdout; stderr ]
+      ~f:(fun () ->
+        Printf.printf "1%!";
+        Printf.eprintf "2%!";
+        Printf.printf "3%!")
+  in
+  expect ~here:__LOC__ ~expected:"123" s
+
 (* capture_channels with a channel duplicated in the list: the innermost
    redirection wins, earlier entries capture nothing *)
 let () =
